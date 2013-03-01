@@ -1,8 +1,5 @@
 from lib import coordinate_mapper
+from lib import grind
 
-root_dir = 'C:\\dev\\python\\rbot\\images\\buttons'
-
-mapper = coordinate_mapper.CoordinateMapper(root_dir)
-mapper.map_buttons()
-
-print mapper.button_coords
+mapper = coordinate_mapper.CoordinateMapper('C:\\dev\\python\\rbot\\images\\buttons')
+grinder = grind.Grind(mapper.map_buttons())
