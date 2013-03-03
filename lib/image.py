@@ -13,7 +13,7 @@ class Image():
         split_path = self._path.split(sep)
         image_name_with_extension = split_path[len(split_path)-1]
 
-        return image_name_with_extension.split('.')[1]
+        return image_name_with_extension.split('.')[0]
 
     def _create_mat(self):
         return imread(self._path)

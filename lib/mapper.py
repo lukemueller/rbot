@@ -1,6 +1,6 @@
 from os import sep, listdir, path
-from lib import Image
-from lib import Matcher
+from lib.image import Image
+from lib.matcher import Matcher
 
 
 class Mapper():
@@ -25,18 +25,17 @@ class Mapper():
         abs_image_dir = self._resolve_root_image_dir()
         file_paths = []
 
-        for files in listdir(abs_image_dir):
-            for file in files:
-                file_paths.append(abs_image_dir + sep + file)
+        for file in listdir(abs_image_dir):
+            file_paths.append(abs_image_dir + sep + file)
 
         return file_paths
 
     def _resolve_root_image_dir(self):
-        relative_image_dir = '..' + sep + 'images'
+        relative_image_dir = 'images' + sep + 'buttons'
         return path.abspath(relative_image_dir)
 
     def _create_button_mappings(self):
-        for matcher in self._matchers():
+        for matcher in self._matchers:
             self._buttons[matcher.get_action()] = matcher.get_coordinates()
 
     def get(self, key):

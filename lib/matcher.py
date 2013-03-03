@@ -1,24 +1,19 @@
-from cv2 import matchTemplate
+from cv2 import matchTemplate, TM_CCOEFF
 import numpy as np
-from lib import Image
+from lib.image import Image
 
 
 class Matcher():
     # @ToDo: TEMPLATE should be a screen grab - np.asarray(ImageGrab.grab())[:,:,::-1].copy()
-    TEMPLATE = Image('template')
+    TEMPLATE = Image('C:\\dev\\python\\rbot\\images\\template.bmp').mat
     OFFSET = 15
 
-    def __init__(self, image, match_method='TM_CCOEFF'):
+    def __init__(self, image, match_method=''):
         self._button = image
-        self._match_method = self._import_match_method(match_method)
         self._match_result = self._find_button()
 
-    def _import_match_method(self, match_method):
-        module = "cv2.%s" % match_method
-        return __import__(module)
-
     def _find_button(self):
-        return matchTemplate(self._button.mat(), Matcher.TEMPLATE, self._match_method)
+        return matchTemplate(self._button.mat, Matcher.TEMPLATE, TM_CCOEFF)
 
     def _get_raw_coordinates(self):
         return np.unravel_index(self._match_result.argmax(), self._match_result.shape)

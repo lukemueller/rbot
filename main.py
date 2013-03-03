@@ -12,21 +12,22 @@ class Bot():
         task = self._get_task()
 
         klass = task[0].capitalize() + task[1:]
-        runnable = __import__("runnable.%s.%s.%s" % role, task, klass)
+        exec("from runnable.%s.%s import %s" % (role, task, klass))
+        runnable = Attack(self.mapper)
 
         while(True):
-            runnable(self.mapper).run()
+            runnable.run()
 
     def _get_role(self):
         roles = ['visitor']
-        prompt = self.generate_prompt("Select character class:\n", roles)
+        prompt = self._generate_prompt("Select character class:\n", roles)
         prompt_index = raw_input(prompt)
 
         return roles[int(prompt_index)-1]
 
     def _get_task(self):
         tasks = ['attack']
-        prompt = self.generate_prompt("Pick a task:\n", tasks)
+        prompt = self._generate_prompt("Pick a task:\n", tasks)
         prompt_index = raw_input(prompt)
 
         return tasks[int(prompt_index)-1]
@@ -34,6 +35,6 @@ class Bot():
     def _generate_prompt(self, header, options):
         prompt = header
         for option in options:
-            prompt += "(%i) %s" % options.index(option)+1, option
+            prompt += "(%s) %s" % (options.index(option)+1, option)
 
 Bot()
