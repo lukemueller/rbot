@@ -1,40 +1,48 @@
 from lib.mapper import Mapper
+from lib.prompter import Prompter
 
 
 class Bot():
 
-    def __init__(self):
-        self.mapper = Mapper()
-        self.run()
+    def __init__(self, prompter, mapper):
+        self.prompter = prompter
+        self.mapper = mapper
+        
 
-    def run(self):
-        role = self._get_role()
-        task = self._get_task()
+    def start_botting(self):
+        self.prompter.start()
 
-        klass = task[0].capitalize() + task[1:]
-        exec("from runnable.%s.%s import %s" % (role, task, klass))
-        runnable = Attack(self.mapper)
+        # Wait for prompter to get required initial information from user
+        while(self.prompter.is_initializing()):
+            pass
 
-        while(True):
+        # Run until user exits
+        while(self.prompter.current_task() is not 'exit'):
+            module = self._resolve_module_name()
+            klass = self._resolve_klass_name()
+
+            import_statement = "from runnable.%s.%s import %s" % \
+                                (self.prompter.current_role(), module, klass)
+
+            exec(import_statement)
+
+            runnable = None
+            exec("runnable = %s(Mapper())" % klass)
+
+            # runnable.start()
             runnable.run()
 
-    def _get_role(self):
-        roles = ['visitor']
-        prompt = self._generate_prompt("Select character class:\n", roles)
-        prompt_index = raw_input(prompt)
+        print 'program should exit here'
 
-        return roles[int(prompt_index)-1]
+    def _resolve_module_name(self):
+        return self.prompter.current_task() + "_runnable"
 
-    def _get_task(self):
-        tasks = ['attack']
-        prompt = self._generate_prompt("Pick a task:\n", tasks)
-        prompt_index = raw_input(prompt)
+    def _resolve_klass_name(self):
+        task = self.prompter.current_task()
+        return task[0].capitalize() + task[1:] + "Runnable"
 
-        return tasks[int(prompt_index)-1]
 
-    def _generate_prompt(self, header, options):
-        prompt = header
-        for option in options:
-            prompt += "(%s) %s" % (options.index(option)+1, option)
-
-Bot()
+prompter = Prompter()
+mapper = Mapper()
+rbot = Bot(prompter, mapper)
+rbot.start_botting()
