@@ -1,6 +1,7 @@
 from lib.skill_bar import SkillBar
 from util.image_finder import ImageFinder
 
+
 class Bot():
 
     def __init__(self, prompter):
@@ -20,11 +21,11 @@ class Bot():
             module = self.prompter.current_task()
             klass = self._resolve_klass_name()
 
-            exec("from runnable.%s.%s import %s" % \
-                    (self.prompter.current_role(), module, klass))
+            exec("from runnable.%s.%s import %s" %
+                (self.prompter.current_role(), module, klass))
 
             runnable = None
-            exec("runnable = %s()" % klass)
+            exec("runnable = %s(skill_bar)" % klass)
 
             runnable.run()
 

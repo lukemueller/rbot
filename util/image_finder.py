@@ -15,8 +15,8 @@ class ImageFinder():
     def _get_images(self):
         images = []
 
-        for path in self._get_image_paths():
-            image = Image(path)
+        for image_path in self._get_image_paths():
+            image = Image(image_path)
             images.append(image)
 
         return images
