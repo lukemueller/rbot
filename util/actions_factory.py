@@ -27,19 +27,16 @@ class ActionsFactory():
         self._actions.append(action)
 
     def _map_keys(self):
-        sorted_by_x = sorted(self._actions, key=lambda action: self._actions.coords[0])
+        sorted_by_x = sorted(self._actions, key=lambda action: action.coords[0])
 
         for index in range(len(sorted_by_x)):
-            sorted_by_x[index].key_binding = ActionsFactory.KEYS[index]
-
-        for action in self._actions:
-            print action.name, ": ", action.key_binding
+            sorted_by_x[index].set_key_binding(ActionsFactory.KEYS[index])
 
     def generate_actions(self):
         for image, match_result in self._finder.get_matched_images():
             self._generate_action(image, match_result)
 
-        # self._map_keys()
+        self._map_keys()
 
         return self._actions
 

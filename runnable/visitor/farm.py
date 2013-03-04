@@ -5,5 +5,5 @@ class Farm(BaseRunnable):
 
     def run(self):
         self.do_action("target")
-        self.do_action_and_pause("attack", 6)
+        self.do_action_and_pause("attack", 5)
         self.spam_pickup(2)
