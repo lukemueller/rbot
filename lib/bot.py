@@ -16,18 +16,28 @@ class Bot():
 
         skill_bar = SkillBar(ImageFinder())
 
+        old_task = self.prompter.current_task()
+        current_task = None
+
+        module = self.prompter.current_task()
+        klass = self._resolve_klass_name()
+
+        runnable = None
+
         # Run until user exits
         while(self.prompter.current_task() is not 'exit'):
-            module = self.prompter.current_task()
-            klass = self._resolve_klass_name()
+            if old_task is not current_task:
+                module = self.prompter.current_task()
+                klass = self._resolve_klass_name()
 
-            exec("from runnable.%s.%s import %s" %
-                (self.prompter.current_role(), module, klass))
-
-            runnable = None
-            exec("runnable = %s(skill_bar)" % klass)
+                exec("from runnable.%s.%s import %s" %
+                    (self.prompter.current_role(), module, klass))
+            
+                exec("runnable = %s(skill_bar)" % klass)
 
             runnable.run()
+
+            current_task = self.prompter.current_task()
 
         print 'program should exit here'
 
