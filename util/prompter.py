@@ -8,7 +8,6 @@ class Prompter():
         self._roles = []
         self._options = self._get_options()
         self.results = []
-        self._get_results()
 
     def _resolve_config_path(self):
         return path.abspath('config')
@@ -69,3 +68,6 @@ class Prompter():
                 print "Input must be a number"
 
         return user_input
+
+    def start(self):
+        self._get_results()

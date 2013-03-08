@@ -1,46 +1,68 @@
-from lib.skill_bar import SkillBar
+from time import time
+import pywinauto
+from util.config import Config
 from util.image_finder import ImageFinder
+from lib.skill_bar import SkillBar
+from lib.runnable import Runnable
+from lib.client import Client
 
 
 class Bot():
 
     def __init__(self, prompter):
-        self.prompter = prompter
+        self._prompter = prompter
+        self._window_handles = self._get_windows()
+        self._clients = []
+        self.start()
+        # Temp
+        self._last_buff = None
+
+    def _get_windows(self):
+        pywinauto.application.Application()
+        handles = pywinauto.findwindows.find_windows(
+            title=u'ROSE Online',
+            class_name="RoseOnline")
+        if isinstance(handles, type([])):
+            return handles.reverse()
+        else:
+            return handles,
+
+    def _create_client(self, role, task, character_index):
+        config = Config(role, task)
+        image_finder = ImageFinder(config)
+        skill_bar = SkillBar(image_finder)
+        runnable = Runnable(skill_bar, config)
+
+        return Client(
+            runnable,
+            self._window_handles[character_index]).initialize()
+
+    def _should_buff(self):
+        # Temp
+        time_since_last_buff = time() - self._last_buff
+        return int(time_since_last_buff) > 900
 
     def start(self):
-        self.prompter.start()
+        self._prompter.start()
 
-        # Wait for prompter to get required initial information from user
-        while(self.prompter.is_initializing()):
-            pass
+        character_count = 0
+        for role, task in self._prompter.results.items():
+            self._clients.append(
+                self._create_client(role, task, character_count))
+            character_count += 1
 
-        skill_bar = SkillBar(ImageFinder())
+        raider = self._clients[0]
+        cleric = self._clients[1]
 
-        old_task = self.prompter.current_task()
-        current_task = None
+        # initial buff
+        cleric.run()
+        self._last_buff = time()
 
-        module = self.prompter.current_task()
-        klass = self._resolve_klass_name()
+        while(True):
+            # start leveling
+            raider.run()
 
-        runnable = None
-
-        # Run until user exits
-        while(self.prompter.current_task() is not 'exit'):
-            if old_task is not current_task:
-                module = self.prompter.current_task()
-                klass = self._resolve_klass_name()
-
-                exec("from runnable.%s.%s import %s" %
-                    (self.prompter.current_role(), module, klass))
-            
-                exec("runnable = %s(skill_bar)" % klass)
-
-            runnable.run()
-
-            current_task = self.prompter.current_task()
-
-        print 'program should exit here'
-
-    def _resolve_klass_name(self):
-        task = self.prompter.current_task()
-        return task[0].capitalize() + task[1:]
+            #check buffs
+            if self._should_buff():
+                cleric.run()
+                self._last_buff = time()
