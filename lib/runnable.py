@@ -1,9 +1,6 @@
-# Simple proxy class that delages to the skillbar public API
+class Runnable():
 
-
-class BaseRunnable():
-
-    def __init__(self, skill_bar):
+    def __init__(self, skill_bar, config):
         self._skill_bar = skill_bar
 
     def do_action_and_pause(self, action, pause):
