@@ -1,13 +1,21 @@
+from time import time
+
+
 class Runnable():
 
     def __init__(self, skill_bar, config):
+        self._config = config
         self._skill_bar = skill_bar
+        self._last_run = None
 
-    def do_action_and_pause(self, action, pause):
-        self._skill_bar.do_action_and_pause(action, pause)
+    def initialize(self):
+        self._skill_bar.set_up_from_focused_screen()
 
-    def do_action(self, action):
-        self._skill_bar.do_action(action)
+    def should_run(self):
+        time_since_last_run = time() - self._last_run
+        return time_since_last_run > int(self._config.cycle_time)
 
-    def spam_pickup(self, count):
-        self._skill_bar.spam_pickup(count)
+    def run(self):
+        self._last_run = time()
+        for action_name, pause in self._config.actions.items():
+            self._skill_bar.do_action(action_name, pause)

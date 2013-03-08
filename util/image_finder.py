@@ -52,7 +52,6 @@ class ImageFinder():
         return matchTemplate(image.mat, ImageFinder.TEMPLATE, TM_CCOEFF)
 
     def find_images(self):
-        # ToDo: focus game window before finding images
         self._match_all_images()
 
     def get_matched_images(self):

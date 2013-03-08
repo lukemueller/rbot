@@ -6,11 +6,12 @@ from time import sleep
 class SkillBar():
 
     def __init__(self, image_finder):
-        self._action_map = self._map_actions_from_screen(image_finder)
+        self._image_finder = image_finder
+        self._action_map = None
 
-    def _map_actions_from_screen(self, image_finder):
-        image_finder.find_images()
-        actions = ActionsFactory(image_finder).generate_actions()
+    def _map_actions_from_screen(self):
+        self._image_finder.find_images()
+        actions = ActionsFactory(self._image_finder).generate_actions()
 
         return self._map_actions(actions)
 
@@ -39,7 +40,10 @@ class SkillBar():
         self._move_mouse(action.coords)
         self._double_click()
 
-    def do_action_and_pause(self, action_name, pause):
+    def initialize(self):
+        self._map_actions_from_screen(self)
+
+    def do_action(self, action_name, pause):
         action = self._get_action(action_name)
 
         if action.key_binding is not None:
@@ -47,10 +51,3 @@ class SkillBar():
         else:
             self._do_action_with_mouse(action)
         sleep(pause)
-
-    def do_action(self, action_name):
-        self.do_action_and_pause(action_name, 0)
-
-    def spam_pickup(self, count):
-        for x in range(count):
-            self.do_action_and_pause("pickup", 2)
