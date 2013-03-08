@@ -1,14 +1,14 @@
-from os import sep, listdir, path
+from os import listdir, path
 from lib.image import Image
 from cv2 import matchTemplate, TM_CCOEFF
 
 
-# @ToDo: mapper should only map buttons for the user's role
 class ImageFinder():
     # @ToDo: TEMPLATE should be a screen grab - np.asarray(ImageGrab.grab())[:,:,::-1].copy()
     TEMPLATE = Image('C:\\dev\\python\\rbot\\images\\template.bmp').mat
 
-    def __init__(self):
+    def __init__(self, config):
+        self._config = config
         self._images = self._get_images()
         self._match_results = {}
 
@@ -22,19 +22,26 @@ class ImageFinder():
         return images
 
     def _get_image_paths(self):
-        abs_image_dir = self._resolve_root_image_dir()
         file_paths = []
 
-        for file in listdir(abs_image_dir):
-            file_paths.append(abs_image_dir + sep + file)
+        self._get_images_in_path(
+            path.abspath(
+                path.join('images', self._config.role)),
+            file_paths)
+
+        self._get_images_in_path(
+            path.abspath(
+                path.join('images', 'common')),
+            file_paths)
 
         return file_paths
 
-    def _resolve_root_image_dir(self):
-        relative_image_dir = 'images' + sep + 'buttons'
-        absolute_image_dir = path.abspath(relative_image_dir)
+    def _get_images_in_path(root, paths):
+        for file in listdir(root):
+            image_path = path.join(root, file)
+            paths.append(image_path)
 
-        return absolute_image_dir
+        return paths
 
     def _match_all_images(self):
         for image in self._images:
