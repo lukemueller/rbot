@@ -19,10 +19,7 @@ class Config():
         lines = config.readlines()
         config.close()
 
-        try:
-            self.cycle_time = int(lines[0].rstrip())
-        except ValueError:
-            self.cycle_time = lines[0].rstrip()
+        self.cycle_time = int(lines[0].rstrip())
 
         actions = {}
         for line in lines[1:]:
