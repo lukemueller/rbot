@@ -4,12 +4,12 @@ from os import listdir, path
 class Prompter():
 
     def __init__(self):
-        self._config_path = self._resolve_config_path()
+        self._root_config_path = self._resolve_root_config_path()
         self._roles = []
         self._options = self._get_options()
         self.results = []
 
-    def _resolve_config_path(self):
+    def _resolve_root_config_path(self):
         return path.abspath('config')
 
     def _get_options(self):
@@ -21,11 +21,15 @@ class Prompter():
         return options
 
     def _get_roles(self):
-        self._roles = listdir(self._config_path)
+        self._roles = listdir(self._root_config_path)
         return self._roles
 
     def _get_tasks_for_role(self, role):
-        return listdir(path.join(self._config_path, role))
+        tasks = []
+        for task in listdir(path.join(self._root_config_path, role)):
+            tasks.append(task.split('.')[0])
+
+        return tasks
 
     def _get_results(self):
         character_count_prompt = \

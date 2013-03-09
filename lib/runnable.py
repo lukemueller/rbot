@@ -9,7 +9,7 @@ class Runnable():
         self._last_run = None
 
     def initialize(self):
-        self._skill_bar.set_up_from_focused_screen()
+        self._skill_bar.initialize()
 
     def should_run(self):
         time_since_last_run = time() - self._last_run

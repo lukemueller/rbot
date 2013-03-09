@@ -27,6 +27,9 @@ class ActionsFactory():
         self._actions.append(action)
 
     def _map_keys(self):
+        # ToDo - this algorithm needs to be way better.
+        #        Currently it will only correctly map actions on the skillbar
+        #        that are sequential on the bottom row and have a matching button
         sorted_by_x = sorted(self._actions, key=lambda action: action.coords[0])
 
         for index in range(len(sorted_by_x)):

@@ -41,7 +41,7 @@ class SkillBar():
         self._double_click()
 
     def initialize(self):
-        self._map_actions_from_screen(self)
+        self._action_map = self._map_actions_from_screen()
 
     def do_action(self, action_name, pause):
         action = self._get_action(action_name)
@@ -50,4 +50,4 @@ class SkillBar():
             self._do_action_by_key(action)
         else:
             self._do_action_with_mouse(action)
-        sleep(pause)
+        sleep(float(pause))

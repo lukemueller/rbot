@@ -4,8 +4,6 @@ from cv2 import matchTemplate, TM_CCOEFF
 
 
 class ImageFinder():
-    # @ToDo: TEMPLATE should be a screen grab - np.asarray(ImageGrab.grab())[:,:,::-1].copy()
-    TEMPLATE = Image('C:\\dev\\python\\rbot\\images\\template.bmp').mat
 
     def __init__(self, config):
         self._config = config
@@ -36,7 +34,7 @@ class ImageFinder():
 
         return file_paths
 
-    def _get_images_in_path(root, paths):
+    def _get_images_in_path(self, root, paths):
         for file in listdir(root):
             image_path = path.join(root, file)
             paths.append(image_path)
@@ -49,9 +47,13 @@ class ImageFinder():
             self._match_results[image] = match_result
 
     def _match(self, image):
-        return matchTemplate(image.mat, ImageFinder.TEMPLATE, TM_CCOEFF)
+        # ToDo - need a threshold for false matches
+        print "matching %s" % image.name
+        return matchTemplate(image.mat, self._template.mat, TM_CCOEFF)
 
     def find_images(self):
+        # @ToDo: TEMPLATE should be a screen grab - np.asarray(ImageGrab.grab())[:,:,::-1].copy()
+        self._template = Image('C:\\dev\\python\\rbot\\images\\template.bmp')
         self._match_all_images()
 
     def get_matched_images(self):
