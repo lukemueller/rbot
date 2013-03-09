@@ -1,6 +1,8 @@
 from os import listdir, path
 from lib.image import Image
 from cv2 import matchTemplate, TM_CCOEFF
+import numpy as np
+from PIL import ImageGrab
 
 
 class ImageFinder():
@@ -48,12 +50,13 @@ class ImageFinder():
 
     def _match(self, image):
         # ToDo - need a threshold for false matches
-        print "matching %s" % image.name
-        return matchTemplate(image.mat, self._template.mat, TM_CCOEFF)
+        return matchTemplate(image.mat, self._template, TM_CCOEFF)
+
+    def _get_template(self):
+        return np.asarray(ImageGrab.grab())[:,:,::-1].copy()
 
     def find_images(self):
-        # @ToDo: TEMPLATE should be a screen grab - np.asarray(ImageGrab.grab())[:,:,::-1].copy()
-        self._template = Image('C:\\dev\\python\\rbot\\images\\template.bmp')
+        self._template = self._get_template()
         self._match_all_images()
 
     def get_matched_images(self):
