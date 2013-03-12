@@ -67,7 +67,7 @@ class Bot():
             client.initialize()
             self._clients.append(client)
             character_count += 1
-            x += 200 
+            x += 200
 
         raider = self._clients[0]
         cleric = self._clients[1]

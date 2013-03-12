@@ -9,7 +9,6 @@ class Runnable():
         self._last_run = None
 
     def initialize(self):
-        print self._config.role
         self._skill_bar.initialize_with_config(self._config)
 
     def should_run(self):

@@ -35,8 +35,6 @@ class ActionsFactory():
 
         for index in range(len(sorted_by_x)):
             sorted_by_x[index].set_key_binding(ActionsFactory.KEYS[index])
-        print
-        print
 
     def generate_actions_from_match_results(self):
         for image, match_result in self._finder.get_matched_images():

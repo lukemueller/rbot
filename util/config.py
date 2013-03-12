@@ -32,7 +32,6 @@ class Config():
     def _map_actions(self):
         config = open(self._path, 'r')
         lines = config.readlines()
-        print lines
         config.close()
 
         self.cycle_time = int(lines[0].rstrip())
@@ -43,5 +42,4 @@ class Config():
             action_name, key, sleep = line.split(' ')
             actions.append((action_name, key, sleep))
 
-        print actions
-        return actions 
+        return actions

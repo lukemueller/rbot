@@ -1,6 +1,6 @@
-import pywinauto
 from time import sleep
 from autopy import mouse
+
 
 class Client():
 
@@ -26,7 +26,7 @@ class Client():
     def run(self, focus=True):
         if focus:
             self.set_focus()
-        print "running %s for %s" %(self._runnable._config.task, self._runnable._config.role)
+
         self._runnable.run()
 
     def should_run(self):
