@@ -6,8 +6,9 @@ class ActionsFactory():
     OFFSET = 15
     KEYS = ['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12']
 
-    def __init__(self, finder):
+    def __init__(self, finder, config):
         self._finder = finder
+        self._config = config
         self._actions = []
 
     def _get_raw_coordinates(self, match_result):
@@ -34,12 +35,25 @@ class ActionsFactory():
 
         for index in range(len(sorted_by_x)):
             sorted_by_x[index].set_key_binding(ActionsFactory.KEYS[index])
+        print
+        print
 
-    def generate_actions(self):
+    def generate_actions_from_match_results(self):
         for image, match_result in self._finder.get_matched_images():
             self._generate_action(image, match_result)
 
         self._map_keys()
 
         return self._actions
+
+    def generate_actions_from_config(self):
+        for tuple in self._config.actions:
+            action_name, key, pause = tuple
+            action = Action(action_name, None, 'key', pause)
+            action.set_key_binding(key)
+            self._actions.append(action)
+
+        return self._actions
+
+
 

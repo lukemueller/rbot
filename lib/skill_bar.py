@@ -10,9 +10,13 @@ class SkillBar():
         self._action_map = None
 
     def _map_actions_from_screen(self):
-        self._image_finder.find_images()
-        actions = ActionsFactory(self._image_finder).generate_actions()
+        self._image_finder.initialize()
+        actions = ActionsFactory(self._image_finder, None).generate_actions_from_match_results()
 
+        return self._map_actions(actions)
+
+    def _map_actions_from_config(self, config):
+        actions = ActionsFactory(None, config).generate_actions_from_config()
         return self._map_actions(actions)
 
     def _map_actions(self, actions):
@@ -40,14 +44,19 @@ class SkillBar():
         self._move_mouse(action.coords)
         self._double_click()
 
-    def initialize(self):
+    def initialize_with_image_finder(self):
         self._action_map = self._map_actions_from_screen()
 
-    def do_action(self, action_name, pause):
+    def initialize_with_config(self, config):
+        self._action_map = self._map_actions_from_config(config)
+
+    def do_action(self, action_name):
         action = self._get_action(action_name)
 
-        if action.key_binding is not None:
+        print '%s - %s:%s' % (action_name, action.raw_key, action.key_binding)
+
+        if action.preferred_method is 'key':
             self._do_action_by_key(action)
         else:
             self._do_action_with_mouse(action)
-        sleep(float(pause))
+        sleep(float(action.pause))

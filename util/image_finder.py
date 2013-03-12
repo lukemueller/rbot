@@ -55,7 +55,7 @@ class ImageFinder():
     def _get_template(self):
         return np.asarray(ImageGrab.grab())[:,:,::-1].copy()
 
-    def find_images(self):
+    def initialize(self):
         self._template = self._get_template()
         self._match_all_images()
 

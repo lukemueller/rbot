@@ -14,17 +14,34 @@ class Config():
         relative_path = 'config' + sep + self.role + sep + self.task + '.cfg'
         return path.abspath(relative_path)
 
+    # def _map_actions(self):
+    #     config = open(self._path, 'r')
+    #     lines = config.readlines()
+    #     config.close()
+
+    #     self.cycle_time = int(lines[0].rstrip())
+
+    #     actions = {}
+    #     for line in lines[1:]:
+    #         line = line.rstrip()
+    #         action_name, sleep = line.split(' ')
+    #         actions[action_name] = sleep
+
+    #     return actions
+
     def _map_actions(self):
         config = open(self._path, 'r')
         lines = config.readlines()
+        print lines
         config.close()
 
         self.cycle_time = int(lines[0].rstrip())
 
-        actions = {}
+        actions = []
         for line in lines[1:]:
             line = line.rstrip()
-            action_name, sleep = line.split(' ')
-            actions[action_name] = sleep
+            action_name, key, sleep = line.split(' ')
+            actions.append((action_name, key, sleep))
 
-        return actions
+        print actions
+        return actions 
