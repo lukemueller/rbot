@@ -6,9 +6,9 @@ class ActionsFactory():
     OFFSET = 15
     KEYS = ['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12']
 
-    def __init__(self, finder, config):
+    def __init__(self, finder, task):
         self._finder = finder
-        self._config = config
+        self._task = task
         self._actions = []
 
     def _get_raw_coordinates(self, match_result):
@@ -44,8 +44,8 @@ class ActionsFactory():
 
         return self._actions
 
-    def generate_actions_from_config(self):
-        for tuple in self._config.actions:
+    def generate_actions_from_task(self):
+        for tuple in self._task.actions:
             action_name, key, pause = tuple
             action = Action(action_name, None, 'key', pause)
             action.set_key_binding(key)

@@ -15,8 +15,8 @@ class SkillBar():
 
         return self._map_actions(actions)
 
-    def _map_actions_from_config(self, config):
-        actions = ActionsFactory(None, config).generate_actions_from_config()
+    def _map_actions_from_task(self, task):
+        actions = ActionsFactory(None, task).generate_actions_from_task()
         return self._map_actions(actions)
 
     def _map_actions(self, actions):

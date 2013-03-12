@@ -41,10 +41,13 @@ class Bot():
         # image_finder = ImageFinder(config)
         image_finder = None
         skill_bar = SkillBar(image_finder)
-        runnable = Runnable(skill_bar, config)
+
+        runnables = []
+        for task in config.tasks:
+            runnables.append(Runnable(skill_bar, task))
 
         return Client(
-            runnable,
+            runnables,
             Bot.PWA_APP,
             self._window_handles[character_index],
             coords)
@@ -53,6 +56,23 @@ class Bot():
         # Temp
         time_since_last_buff = time() - self._last_buff
         return int(time_since_last_buff) > 800
+
+    def _get_next_runnable(self):
+        all_runnables = []
+
+        for client in self._clients:
+            all_runnables.append(client.get_run_info())
+
+        next_runnable = None
+        for tuple in all_runnables:
+            client, runnable, needs_to_run, priority = tuple
+            if next_runnable is None:
+                next_runnable = (client, runnable)
+            else:
+                if needs_to_run and priority > next_runnable.get_priority:
+                    next_runnable = (client, runnable)
+
+        return next_runnable
 
     def start(self):
         self._prompter.start()
@@ -69,21 +89,32 @@ class Bot():
             character_count += 1
             x += 200
 
-        raider = self._clients[0]
+        # raider = self._clients[0]
         cleric = self._clients[1]
 
         # initial buff
-        cleric.run(False)
-        self._last_buff = time()
-
-        raider.run(True)
+        cleric.run(cleric._runnables[0], False)
+        # self._last_buff = time()
+        last_client = cleric
 
         while(True):
-            # start leveling
-            raider.run(False)
+            client, runnable = self._get_next_runnable()
+            last_client = client
+            should_focus = False
 
-            #check buffs
-            if self._should_buff():
-                cleric.run()
-                self._last_buff = time()
-                raider.run()
+            if client is last_client:
+                should_focus = True
+
+            client.run(should_focus)
+
+        # raider.run(True)
+
+        # while(True):
+        #     # start leveling
+        #     raider.run(False)
+
+        #     #check buffs
+        #     if self._should_buff():
+        #         cleric.run()
+        #         self._last_buff = time()
+        #         raider.run()
