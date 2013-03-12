@@ -53,8 +53,6 @@ class SkillBar():
     def do_action(self, action_name):
         action = self._get_action(action_name)
 
-        print '%s - %s:%s' % (action_name, action.raw_key, action.key_binding)
-
         if action.preferred_method is 'key':
             self._do_action_by_key(action)
         else:
