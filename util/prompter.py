@@ -74,4 +74,13 @@ class Prompter():
         return user_input
 
     def start(self):
+        print 'Welcome to rbot\n \
+            Make sure your clients are logged in and in position\n \
+            Launch your clients in the order you specify your characters\n\n'
+
         self._get_results()
+
+        print '\n\n'
+        for tuple in self.results:
+            role, task = tuple
+            print 'Running %s for %s' % (task, role)
