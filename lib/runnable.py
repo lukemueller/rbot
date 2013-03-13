@@ -18,7 +18,6 @@ class Runnable():
 
     def run(self, skillbar):
         for action in self._actions:
-            # do action through skillbar API
-            return None
+            skillbar.do_action(action)
 
         self._last_run = time()
