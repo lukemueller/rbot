@@ -29,10 +29,13 @@ class Bot():
         return (260+(character_index*200), 1070)
 
     def _generate_clients(self):
+        clients = []
         for character in self._prompter.characters:
-            self._clients.append(self._generate_client(
+            clients.append(self._generate_client(
                 character,
-                self._get_taskbar_coords()))
+                self._get_taskbar_coords(len(clients))))
+
+        return clients
 
     def _generate_client(self, character, taskbar_coords):
         runnables = RunnableFactory(character).generate_runnables()
@@ -56,7 +59,7 @@ class Bot():
     def _get_next_runnable(self):
         next_runnable = None
         for runnable in self._sorted_by_priority_runnables:
-            if runnable.needs_to_run:
+            if runnable.needs_to_run():
                 next_runnable = runnable
                 break
 

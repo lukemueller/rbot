@@ -14,7 +14,7 @@ class Runnable():
             return True
 
         time_since_last_run = time() - self._last_run
-        return time_since_last_run > self.cycle_time
+        needs_to_runs = time_since_last_run > self.cycle_time
 
     def run(self, skillbar):
         for action in self._actions:

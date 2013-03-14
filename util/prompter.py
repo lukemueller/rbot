@@ -55,7 +55,7 @@ class Prompter():
         return self._options[role][int(task_index)]
 
     def _get_results(self):
-        for x in range(int(self._get_character_count)+1):
+        for x in range(int(self._get_character_count())+1):
             role = self._get_character_role(x)
             task = self._get_character_task(role, x)
             self.characters.append(Character(role, task, x))
@@ -89,6 +89,5 @@ class Prompter():
         self._get_results()
 
         print '\n\n'
-        for tuple in self.characters:
-            role, task = tuple
-            print 'Running %s for %s' % (task, role)
+        for character in self.characters:
+            print 'Running %s for %s' % (character.task, character.role)

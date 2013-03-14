@@ -11,6 +11,7 @@ class WindowHandle():
         class_name='classCLIENT').reverse()
 
     def __init__(self, character_index, taskbar_coords, focus_method='mouse'):
+        self._focus_method = focus_method
         self._window_handle = self._get_window_handle(character_index)
         self._taskbar_coords = taskbar_coords
 
