@@ -1,4 +1,5 @@
 from os import listdir, path
+from lib.character import Character
 
 
 class Prompter():
@@ -31,28 +32,29 @@ class Prompter():
 
         return tasks
 
-    def _get_results(self):
+    def _get_character_count(self):
         character_count_prompt = \
-            self._generate_prompt(
+            self._generate_prompt_message(
                 'How many characters do you want to play?\n')
-        character_count = self._prompt(character_count_prompt)
+        return self._prompt(character_count_prompt)
 
-        for x in range(int(character_count)+1):
+    def _get_results(self):
+        for x in range(int(self._get_character_count)+1):
             role_index = self._prompt(
-                self._generate_prompt(
+                self._generate_prompt_message(
                     "Select role for character %s\n" % x,
                     self._options.keys()))
             role = self._roles[int(role_index)]
 
             task_index = self._prompt(
-                self._generate_prompt(
+                self._generate_prompt_message(
                     "Select task for character %s\n" % x,
                     self._options[role]))
             task = self._options[role][int(task_index)]
 
-            self.results.append((role, task))
+            self.results.append(Character(role, task, x))
 
-    def _generate_prompt(self, header, options=[]):
+    def _generate_prompt_message(self, header, options=[]):
         prompt = header
 
         for index in range(len(options)):
