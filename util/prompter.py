@@ -8,7 +8,7 @@ class Prompter():
         self._root_config_path = self._resolve_root_config_path()
         self._roles = []
         self._options = self._get_options()
-        self.results = []
+        self.characters = []
 
     def _resolve_root_config_path(self):
         return path.abspath('config')
@@ -38,21 +38,27 @@ class Prompter():
                 'How many characters do you want to play?\n')
         return self._prompt(character_count_prompt)
 
+    def _get_character_role(self, character_index):
+        role_index = self._prompt(
+            self._generate_prompt_message(
+                "Select role for character %s\n" % character_index,
+                self._options.keys()))
+
+        return self._roles[int(role_index)]
+
+    def _get_character_task(self, role, character_index):
+        task_index = self._prompt(
+            self._generate_prompt_message(
+                "Select task for character %s\n" % character_index,
+                self._options[role]))
+
+        return self._options[role][int(task_index)]
+
     def _get_results(self):
         for x in range(int(self._get_character_count)+1):
-            role_index = self._prompt(
-                self._generate_prompt_message(
-                    "Select role for character %s\n" % x,
-                    self._options.keys()))
-            role = self._roles[int(role_index)]
-
-            task_index = self._prompt(
-                self._generate_prompt_message(
-                    "Select task for character %s\n" % x,
-                    self._options[role]))
-            task = self._options[role][int(task_index)]
-
-            self.results.append(Character(role, task, x))
+            role = self._get_character_role(x)
+            task = self._get_character_task(role, x)
+            self.characters.append(Character(role, task, x))
 
     def _generate_prompt_message(self, header, options=[]):
         prompt = header
@@ -83,6 +89,6 @@ class Prompter():
         self._get_results()
 
         print '\n\n'
-        for tuple in self.results:
+        for tuple in self.characters:
             role, task = tuple
             print 'Running %s for %s' % (task, role)
