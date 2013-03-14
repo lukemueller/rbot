@@ -5,12 +5,12 @@ from lib.runnable import Runnable
 
 class RunnableFactory():
 
-    def __init__(self, role, task):
-        self.role = role
-        self.task = task
+    def __init__(self, character):
+        self.role = character.role
+        self.task = character.task
         self._config_path = self._get_config_path()
 
-    def generate_runnable(self):
+    def generate_runnables(self):
         line_groups = self._get_grouped_lines()
         runnables = []
 

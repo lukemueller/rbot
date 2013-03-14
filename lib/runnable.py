@@ -9,7 +9,7 @@ class Runnable():
         self._actions = actions
         self._last_run = None
 
-    def should_run(self):
+    def needs_to_run(self):
         if self._last_run is None:
             return True
 
