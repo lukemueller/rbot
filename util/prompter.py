@@ -82,9 +82,9 @@ class Prompter():
         return user_input
 
     def start(self):
-        print 'Welcome to rbot\n \
-            Make sure your clients are logged in and in position\n \
-            Launch your clients in the order you specify your characters\n\n'
+        print 'Welcome to rbot\n'
+        print 'Make sure your clients are logged in and in position'
+        print 'Launch your clients in the order you specify your characters\n\n'
 
         self._get_results()
 
