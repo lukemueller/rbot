@@ -22,8 +22,8 @@ class Bot():
             runnable = self._get_next_runnable()
             client = self._runnable_to_client_map[runnable]
             should_focus = client is not self._last_client
-
             client.run(runnable, should_focus)
+            self._last_client = client
 
     def _get_taskbar_coords(self, character_index):
         return (260+(character_index*200), 1070)
@@ -58,6 +58,7 @@ class Bot():
 
     def _get_next_runnable(self):
         next_runnable = None
+
         for runnable in self._sorted_by_priority_runnables:
             if runnable.needs_to_run():
                 next_runnable = runnable

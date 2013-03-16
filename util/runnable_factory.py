@@ -39,15 +39,18 @@ class RunnableFactory():
         config_lines = self._read_config_file()
         grouped_lines = []
 
+        index = 0
         there_are_still_tasks = True
+
         while there_are_still_tasks:
             try:
                 index = config_lines.index('\n')
                 grouped_lines.append(config_lines[:index])
                 config_lines = config_lines[index+1:]
-            except ValueError:
+            except:
                 there_are_still_tasks = False
-
+                grouped_lines.append(config_lines)
+                
         return grouped_lines
 
     def _read_config_file(self):

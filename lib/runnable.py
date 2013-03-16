@@ -12,12 +12,11 @@ class Runnable():
     def needs_to_run(self):
         if self._last_run is None:
             return True
-
         time_since_last_run = time() - self._last_run
-        needs_to_runs = time_since_last_run > self.cycle_time
+        
+        return time_since_last_run > self.cycle_time
 
     def run(self, skillbar):
+        self._last_run = time()
         for action in self._actions:
             skillbar.do_action(action)
-
-        self._last_run = time()
