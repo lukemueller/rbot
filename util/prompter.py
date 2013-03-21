@@ -42,7 +42,7 @@ class Prompter():
         role_index = self._prompt(
             self._generate_prompt_message(
                 "Select role for character %s\n" % character_index,
-                self._options.keys()))
+                self._roles))
 
         return self._roles[int(role_index)]
 
