@@ -2,9 +2,13 @@ from lib.client import Client
 from lib.skill_bar import SkillBar
 from util.runnable_factory import RunnableFactory
 from util.window_handle import WindowHandle
+from time import sleep, time
 
 
 class Bot():
+    TWO_HOURS   = 7200
+    THREE_HOURS = 10800
+    FIVE_HOURS  = 18000
 
     def __init__(self, prompter):
         self._prompter = prompter
@@ -16,9 +20,10 @@ class Bot():
             self._get_runnable_to_client_map()
         self._sorted_by_priority_runnables = \
             self._get_sorted_by_priority_runnables()
+        self._endtime = time() + Bot.THREE_HOURS
 
     def start(self):
-        while True:
+        while time() < self._endtime:
             runnable = self._get_next_runnable()
             client = self._runnable_to_client_map[runnable]
             should_focus = client is not self._last_client
@@ -63,5 +68,9 @@ class Bot():
             if runnable.needs_to_run():
                 next_runnable = runnable
                 break
+
+        if next_runnable is None:
+            sleep(0.5)
+            next_runnable = self._get_next_runnable()
 
         return next_runnable
